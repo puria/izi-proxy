@@ -25,7 +25,7 @@ class GreenlockProxy {
             })
     }
 
-    register(domains, targets) {
+    register(domains, targets, activeGreenLock) {
         if (!Array.isArray(domains)) {
             domains = [domains];
         }
@@ -36,10 +36,12 @@ class GreenlockProxy {
             domains: domains,
             targets: targets
         })
-        this.greenlock.add({
-            subject: domains[0],
-            altnames: domains
-        })
+        if(activeGreenLock) {
+            this.greenlock.add({
+                subject: domains[0],
+                altnames: domains
+            })
+        }
     }
 
     start() {
@@ -59,7 +61,8 @@ class GreenlockProxy {
     }
 
     httpsWorker(glx) {
-        this.proxy = require("http-proxy").createProxyServer({ xfwd: true });
+        var thisScope = this
+        this.proxy = require("http-proxy").createProxyServer({ xfwd: true, ws:true });
         // catches error events during proxying
         this.proxy.on("error", function (err, req, res) {
             console.error(err);
@@ -67,8 +70,24 @@ class GreenlockProxy {
             res.end();
             return;
         })
+
+        var server = glx.httpsServer();
+        server.on('upgrade', function (req, socket, head) {
+            var traget = thisScope.getTragetByServer(thisScope.rules, req.socket.servername);
+            thisScope.proxy.ws(req, socket, head, { target: 'ws://' + traget });
+        });
         // servers a node app that proxies requests to a localhost
         glx.serveApp(this.serveFcn.bind(this))
+    }
+
+    getTragetByServer(rules, domainInput) {
+        var aRule = rules.filter(function cbFilter(item) {
+            if(item.domains[0] === domainInput) {
+                return true
+            }
+        })
+        var output = aRule[0].targets[0].replace('http://', '').replace('https://', '')
+        return output
     }
 
     serveFcn(req, res) {
