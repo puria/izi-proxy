@@ -7,6 +7,7 @@ Automatically get free SSL certificates from [Let’s Encrypt](https://letsencry
 - Automatically get **free** SSL sertificate from Let's Encrypt
 - Easily redirect requests for your domain to any internal address (like server on any port)
 - Distribute incoming traffic across several servers with built-in balancer
+- Support Web Socket connection
 
 Based on [greenlock-express](https://github.com/coolaj86/greenlock-express).
 
@@ -28,13 +29,14 @@ var proxy = new GreenlockProxy({
 });
 
 // Just bind your domain to internal address - common example
-proxy.register(["dev.example.com", "www.dev.example.com"], ["http://localhost:4200"]);
+// with parameter boolean activeGreenLock for greenlock activation
+proxy.register(["dev.example.com", "www.dev.example.com"], ["http://localhost:4200"], true);
 
 // Optional: bind another domain to another address
-proxy.register(["example.com", "www.example.com"], ["http://localhost:80"]);
+proxy.register(["example.com", "www.example.com"], ["http://localhost:80"], true);
 
 // Optional: simple random balancer
-proxy.register(["balancer.example.com", "www.balancer.example.com"], ["http://localhost:81","http://localhost:82","http://localhost:83"]);
+proxy.register(["balancer.example.com", "www.balancer.example.com"], ["http://localhost:81","http://localhost:82","http://localhost:83"], false);
 
 // Start proxiyng
 proxy.start();
