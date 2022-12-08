@@ -1,4 +1,4 @@
-declare module 'greenlock-proxy' {
+declare module 'izi-proxy' {
   import { ClientRequest, ServerResponse } from 'http';
   import ProxyServer from 'http-proxy';
 

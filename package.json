@@ -1,17 +1,17 @@
 {
-  "name": "greenlock-proxy",
+  "name": "izi-proxy",
   "version": "0.2.0",
   "description": "HTTPS proxy wrapper for greenlock",
   "main": "index.js",
   "scripts": {
     "postversion": "git push && git push --tags"
   },
-  "author": "https://github.com/roslovets",
+  "author": "Puria Nafisi Azizi <puria@dyne.org>",
   "license": "ISC",
-  "homepage": "https://github.com/Roslovets-Inc/greenlock-proxy#readme",
+  "homepage": "https://github.com/puria/izi-proxy#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Roslovets-Inc/greenlock-proxy"
+    "url": "https://github.com/puria/izi-proxy"
   },
   "keywords": [
     "SSL",
@@ -22,6 +22,7 @@
     "greenlock"
   ],
   "dependencies": {
+    "@root/greenlock": "^4.0.5",
     "greenlock-express": "^4.0.3",
     "http-proxy": "^1.18.1"
   }
